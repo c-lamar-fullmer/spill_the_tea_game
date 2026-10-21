@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Spill the Tea — Scorecard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Space+Mono:wght@400;700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #241220;
+    --bg-alt: #33182d;
+    --card: #2f1729;
+    --card-raised: #3a1e34;
+    --gold: #c9a227;
+    --gold-soft: #e0c471;
+    --rose: #d88c9a;
+    --text: #f3e9dc;
+    --text-dim: #c9b8bb;
+    --text-faint: #9a848a;
+    --line: #55324a;
+    --good: #8fae7c;
+    --bad: #c46b6b;
+    --radius: 14px;
+  }
+  *{box-sizing:border-box; min-width:0;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:
+      radial-gradient(ellipse 700px 400px at 15% -5%, rgba(201,162,39,0.10), transparent 60%),
+      radial-gradient(ellipse 600px 500px at 100% 10%, rgba(216,140,154,0.08), transparent 55%),
+      var(--bg);
+    color:var(--text);
+    font-family:'Work Sans', sans-serif;
+    min-height:100vh;
+    -webkit-font-smoothing:antialiased;
+  }
+  .app{
+    max-width:520px;
+    margin:0 auto;
+    min-height:100vh;
+    padding:20px 16px 48px;
+    position:relative;
+  }
+  .stain{
+    position:absolute;
+    border-radius:50%;
+    border:1.5px solid var(--gold);
+    opacity:0.08;
+    pointer-events:none;
+  }
+  h1,h2,h3{font-family:'Playfair Display', serif; margin:0; letter-spacing:0.2px;}
+  .brand{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    text-align:center;
+    padding:28px 0 22px;
+    position:relative;
+  }
+  .brand .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:11px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:10px;
+  }
+  .brand h1{
+    font-size:clamp(28px, 9vw, 38px);
+    font-style:italic;
+    font-weight:700;
+    color:var(--text);
+    line-height:1.05;
+  }
+  .brand h1 span{ color:var(--rose); font-style:normal; }
+  .brand .sub{
+    margin-top:8px;
+    font-size:13px;
+    color:var(--text-faint);
+  }
+  .cup{
+    width:46px;height:46px;margin-bottom:6px;
+  }
+
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+    margin-bottom:14px;
+    box-shadow:0 8px 24px -12px rgba(0,0,0,0.5);
+    overflow:hidden;
+  }
+  .card h2{ font-size:20px; margin-bottom:4px; color:var(--text);}
+  .card .desc{ font-size:13px; color:var(--text-faint); margin-bottom:16px; line-height:1.5;}
+
+  label{
+    display:block;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:6px;
+    font-family:'Space Mono', monospace;
+  }
+  input[type=text], input[type=number]{
+    width:100%;
+    background:var(--bg-alt);
+    border:1px solid var(--line);
+    color:var(--text);
+    border-radius:9px;
+    padding:12px 14px;
+    font-size:16px;
+    font-family:'Work Sans', sans-serif;
+    margin-bottom:14px;
+    -webkit-appearance:none;
+  }
+  input:focus{ outline:none; border-color:var(--gold); }
+  input::placeholder{ color:var(--text-faint); }
+
+  .btn{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+    padding:13px 18px;
+    border-radius:9px;
+    border:none;
+    font-family:'Work Sans', sans-serif;
+    font-weight:600;
+    font-size:15px;
+    cursor:pointer;
+    transition:transform .12s ease, opacity .12s ease;
+    text-align:center;
+  }
+  .btn:active{ transform:scale(0.98); }
+  .btn-primary{ background:var(--gold); color:#2a1a0a; }
+  .btn-ghost{ background:transparent; color:var(--text-dim); border:1px solid var(--line); }
+  .btn-rose{ background:var(--rose); color:#2a1015; }
+  .btn:disabled{ opacity:0.45; cursor:not-allowed; }
+  .btn-row{ display:flex; flex-wrap:wrap; gap:10px; }
+  .btn-row .btn{ flex:1 1 120px; }
+
+  .divider{
+    display:flex; align-items:center; gap:12px;
+    margin:18px 0;
+    color:var(--text-faint);
+    font-size:11px;
+    font-family:'Space Mono', monospace;
+    letter-spacing:2px;
+  }
+  .divider::before, .divider::after{
+    content:''; flex:1; height:1px; background:var(--line);
+  }
+
+  .room-code{
+    font-family:'Space Mono', monospace;
+    font-size:clamp(24px, 8vw, 32px);
+    letter-spacing:8px;
+    text-align:center;
+    color:var(--gold);
+    padding:14px 0;
+    background:var(--bg-alt);
+    border-radius:9px;
+    border:1px dashed var(--gold);
+    margin-bottom:10px;
+    word-break:break-all;
+  }
+  .hint{ font-size:12px; color:var(--text-faint); text-align:center; margin-bottom:16px;}
+
+  .player-list{ list-style:none; padding:0; margin:0 0 16px; }
+  .player-list li{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;
+    padding:10px 12px;
+    background:var(--bg-alt);
+    border-radius:8px;
+    margin-bottom:8px;
+    font-size:15px;
+  }
+  .player-list li .tag{
+    font-family:'Space Mono', monospace;
+    font-size:10px;
+    color:var(--gold-soft);
+    border:1px solid var(--gold-soft);
+    border-radius:20px;
+    padding:2px 8px;
+    flex-shrink:0;
+  }
+
+  .topbar{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;
+    margin-bottom:16px;
+  }
+  .topbar .who{ font-family:'Playfair Display', serif; font-style:italic; font-size:20px; word-break:break-word;}
+  .topbar .code-chip{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    color:var(--gold-soft);
+    border:1px solid var(--line);
+    border-radius:20px;
+    padding:5px 10px;
+    letter-spacing:2px;
+    flex-shrink:0;
+  }
+
+  /* Full-width action buttons (reveal / full scorecard) */
+  .action-btn{
+    width:100%;
+    border:none;
+    border-radius:11px;
+    padding:14px 16px;
+    font-family:'Work Sans', sans-serif;
+    font-weight:700;
+    font-size:14.5px;
+    margin-bottom:12px;
+    cursor:pointer;
+    display:flex; align-items:center; justify-content:center; gap:8px;
+    text-align:center;
+    line-height:1.3;
+  }
+  .action-btn:active{ transform:scale(0.98); }
+  .action-btn.rose{ background:linear-gradient(135deg, var(--rose), #c96f82); color:#2a1015; }
+  .action-btn.gold{ background:linear-gradient(135deg, var(--gold), #b8901f); color:#2a1a0a; }
+
+  .week-label{ margin-bottom:8px; }
+  .week-grid{
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:5px;
+    margin-bottom:14px;
+    width:100%;
+  }
+  .week-btn{
+    padding:10px 2px;
+    text-align:center;
+    border-radius:8px;
+    border:1px solid var(--line);
+    background:transparent;
+    font-family:'Space Mono', monospace;
+    font-size:13px;
+    color:var(--text-dim);
+    cursor:pointer;
+    user-select:none;
+  }
+  .week-btn.active{ background:var(--gold); color:#2a1a0a; border-color:var(--gold); font-weight:700; }
+
+  /* Rows: label on its own line, controls right-aligned below so values
+     always line up in the same column regardless of row content */
+  .row{
+    display:flex;
+    flex-direction:column;
+    padding:12px 0;
+    border-bottom:1px solid var(--line);
+    gap:8px;
+  }
+  .row:last-child{ border-bottom:none; }
+  .row .row-label{ font-size:14px; color:var(--text); }
+  .row .row-label small{ display:block; color:var(--text-faint); font-size:11px; margin-top:2px; line-height:1.4; }
+  .row .row-control{
+    display:grid;
+    grid-template-columns: 1fr auto;
+    align-items:center;
+    gap:10px;
+  }
+  .control-left{
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    justify-self:start;
+  }
+  .control-right{
+    display:flex; align-items:center; gap:8px;
+    justify-self:end;
+  }
+
+  /* Fixed-width slots so the number that actually contributes to the
+     score always sits in the same horizontal position across every row */
+  .slot{ width:34px; flex-shrink:0; display:flex; align-items:center; justify-content:center; }
+  .slot-value{
+    width:48px; flex-shrink:0; text-align:center;
+    font-family:'Space Mono', monospace; font-weight:700; font-size:16px; color:var(--text);
+  }
+  .subtotal-row .slot-value{ font-size:18px; color:var(--gold-soft); }
+  .final-row .slot-value{ font-size:26px; color:var(--rose); }
+
+  .step-btn{
+    width:32px; height:32px; flex-shrink:0;
+    border-radius:50%;
+    border:1px solid var(--gold);
+    background:var(--bg-alt);
+    color:var(--gold-soft);
+    font-size:17px;
+    font-family:'Space Mono', monospace;
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    user-select:none;
+    line-height:1;
+  }
+  .step-btn:active{ background:var(--gold); color:#2a1a0a; }
+
+  /* Yes/No segmented control */
+  .yesno{
+    display:flex; border:1px solid var(--line); border-radius:20px; overflow:hidden; flex-shrink:0;
+  }
+  .yesno-opt{
+    padding:7px 12px;
+    font-family:'Space Mono', monospace;
+    font-size:12.5px;
+    color:var(--text-dim);
+    cursor:pointer;
+    user-select:none;
+    white-space:nowrap;
+  }
+  .yesno-opt.active-yes{ background:var(--good); color:#12210c; font-weight:700; }
+  .yesno-opt.active-no{ background:var(--card-raised); color:var(--text-faint); font-weight:700; }
+
+  .point-badge{
+    font-family:'Space Mono', monospace;
+    font-size:12.5px;
+    font-weight:700;
+    padding:6px 9px;
+    border-radius:20px;
+    flex-shrink:0;
+    white-space:nowrap;
+  }
+  .point-badge.pos{ color:var(--good); border:1px solid var(--good); }
+  .point-badge.neg{ color:var(--bad); border:1px solid var(--bad); }
+
+  .subtotal-row{
+    background:var(--card-raised);
+    margin:6px -20px;
+    padding:12px 20px;
+    border-top:1px solid var(--gold);
+    border-bottom:1px solid var(--gold);
+  }
+  .subtotal-row .row-label{ font-weight:700; letter-spacing:0.5px; }
+
+  .final-row{
+    margin-top:6px;
+    padding-top:14px;
+  }
+  .final-row .row-label{ font-family:'Playfair Display', serif; font-style:italic; font-size:16px; color:var(--text-dim);}
+
+  .legend-item{
+    padding:10px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .legend-item:last-child{ border-bottom:none; }
+  .legend-item .lname{ font-weight:600; font-size:14px; color:var(--text); display:flex; flex-wrap:wrap; justify-content:space-between; gap:6px;}
+  .legend-item .lname .pts{ font-family:'Space Mono', monospace; font-size:13px;}
+  .legend-item .ldesc{ font-size:12.5px; color:var(--text-faint); margin-top:2px; line-height:1.4;}
+  .pts.pos{ color:var(--good); }
+  .pts.neg{ color:var(--bad); }
+
+  .error-msg{
+    background:rgba(196,107,107,0.12);
+    border:1px solid var(--bad);
+    color:#e3a6a6;
+    padding:10px 14px;
+    border-radius:9px;
+    font-size:13px;
+    margin-bottom:14px;
+  }
+  .loading-msg{
+    text-align:center;
+    color:var(--text-faint);
+    font-size:13px;
+    padding:20px 0;
+    font-family:'Space Mono', monospace;
+  }
+  .collapsible-header{
+    display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px;
+    cursor:pointer;
+  }
+  .chev{ transition:transform .2s ease; color:var(--gold-soft); flex-shrink:0; }
+  .chev.open{ transform:rotate(180deg); }
+
+  .bottom-nav{
+    display:flex; flex-wrap:wrap; gap:8px; margin-top:16px;
+  }
+  .bottom-nav .btn{ font-size:13px; padding:11px; flex:1 1 140px; }
+
+  /* Full scorecard overlay — CSS grid so all 7 weeks fit edge-to-edge, no scrolling */
+  .full-overlay{
+    position:fixed; inset:0;
+    background:var(--bg);
+    z-index:100;
+    overflow-y:auto;
+    padding:18px 10px 32px;
+  }
+  .full-overlay .full-head{
+    text-align:center;
+    margin-bottom:14px;
+    padding:0 8px;
+  }
+  .full-overlay .full-head h2{
+    font-size:21px; font-style:italic;
+  }
+  .full-overlay .full-head .sub{
+    font-size:12px; color:var(--text-faint); margin-top:4px;
+  }
+  .full-grid{
+    display:grid;
+    grid-template-columns: 1.5fr repeat(7, 1fr);
+    border:1px solid var(--line);
+    border-radius:10px;
+    overflow:hidden;
+    margin-bottom:16px;
+    background:var(--bg);
+  }
+  .full-grid .gcell{
+    padding:7px 2px;
+    border-bottom:1px solid var(--line);
+    border-right:1px solid var(--line);
+    font-size:10.5px;
+    text-align:center;
+    font-family:'Space Mono', monospace;
+    display:flex; align-items:center; justify-content:center;
+    line-height:1.2;
+  }
+  .full-grid .gcell.rowlabel{
+    text-align:left;
+    justify-content:flex-start;
+    font-family:'Work Sans', sans-serif;
+    font-size:10.5px;
+    font-weight:600;
+    padding-left:8px;
+  }
+  .full-grid .gcell.head{
+    background:var(--card-raised);
+    color:var(--gold-soft);
+    font-weight:700;
+    font-size:11px;
+  }
+  .full-grid .gcell.head.rowlabel{ color:var(--gold-soft); }
+  .full-grid .gcell.subtotal{ background:rgba(201,162,39,0.12); color:var(--gold-soft); font-weight:700; }
+  .full-grid .gcell.final{ background:rgba(216,140,154,0.14); color:var(--rose); font-weight:700; }
+
+  footer.reset-link{
+    text-align:center;
+    margin-top:22px;
+  }
+  footer.reset-link button{
+    background:none; border:none; color:var(--text-faint);
+    font-size:12px; text-decoration:underline; cursor:pointer;
+    font-family:'Work Sans', sans-serif;
+  }
+
+  .reveal-overlay{
+    position:fixed; inset:0;
+    background:var(--bg);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:24px;
+    z-index:100;
+    text-align:center;
+  }
+  .reveal-overlay .eyebrow{
+    font-family:'Space Mono', monospace;
+    font-size:12px;
+    letter-spacing:3px;
+    text-transform:uppercase;
+    color:var(--gold-soft);
+    margin-bottom:18px;
+  }
+  .reveal-overlay .big-num{
+    font-family:'Playfair Display', serif;
+    font-weight:700;
+    font-style:italic;
+    font-size:clamp(64px, 26vw, 140px);
+    color:var(--rose);
+    line-height:1;
+    margin-bottom:10px;
+  }
+  .reveal-overlay .cap{
+    font-size:14px;
+    color:var(--text-dim);
+    margin-bottom:36px;
+  }
+  .reveal-overlay .btn{
+    max-width:280px;
+  }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+(function(){
+
+const WEEKS = 7;
+const CARD_LEGEND = [
+  {name:"Spill Tea", pts:0, desc:"Reveal your Final Total from the previous week to a player of your choice.", type:"neutral"},
+  {name:"Sip Tea", pts:0, desc:"A player of your choice must reveal their Final Total from the previous week.", type:"neutral"},
+  {name:"Tea Party (1–4 pts)", pts:null, desc:"Gather friends, each rolls the die and records the points earned or lost.", type:"neutral"},
+  {name:"Save Face", pts:0, desc:"Play to protect your reputation during the Saturday Night Party ranking.", type:"neutral"},
+  {name:"Eavesdrop", pts:0, desc:"Look at all of one player's cards, or steal a random card from one player.", type:"neutral"},
+  {name:"Burn Book", pts:0, desc:"Look at all of a player's cards and steal one card of your choice.", type:"neutral"},
+  {name:"Bitter Tea", pts:-1, desc:"The tea looked tasty but didn't taste right.", type:"neg"},
+  {name:"Leftover Tea", pts:-2, desc:"You were too busy to get it while it was still hot.", type:"neg"},
+  {name:"Expired Tea", pts:-3, desc:"You waited way too long to bring this tea to the party.", type:"neg"},
+  {name:"Sweet Tea", pts:1, desc:"This refreshing drink will sweeten up your day.", type:"pos"},
+  {name:"Hot Tea", pts:2, desc:"Who doesn't love tea that's fresh off the pot?", type:"pos"},
+  {name:"Spicy Tea", pts:3, desc:"The tea is almost too spicy, but you can't stop drinking it.", type:"pos"},
+];
+
+let state = {
+  screen:'home',
+  roomCode:null,
+  playerId:null,
+  playerName:null,
+  room:null,
+  scores:null,
+  activeWeek:1,
+  legendOpen:false,
+  showReveal:false,
+  showFullScorecard:false,
+  confirmQuit:false,
+  loading:false,
+  error:null,
+};
+
+function emptyWeek(){
+  return { teaParty:0, partyHost:null, reputationRuined:null, teaCardPoints:0 };
+}
+function emptyScores(){
+  const s = {};
+  for(let i=1;i<=WEEKS;i++) s['week'+i] = emptyWeek();
+  return s;
+}
+
+function genRoomCode(){
+  const letters = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  let code='';
+  for(let i=0;i<4;i++) code += letters[Math.floor(Math.random()*letters.length)];
+  return code;
+}
+function genPlayerId(){
+  return 'p_' + Math.random().toString(36).slice(2,10);
+}
+
+function computeWeek(startingPrev, wk){
+  const subtotal = startingPrev + (Number(wk.teaParty)||0) + (wk.partyHost?3:0) + (wk.reputationRuined?-3:0);
+  const final = subtotal + (Number(wk.teaCardPoints)||0);
+  return {subtotal, final};
+}
+
+function computeAll(scores, startingPoints){
+  let prev = Number(startingPoints)||0;
+  const results = {};
+  for(let i=1;i<=WEEKS;i++){
+    const wk = scores['week'+i] || emptyWeek();
+    const {subtotal, final} = computeWeek(prev, wk);
+    results['week'+i] = {subtotalFromPrev:prev, subtotal, final};
+    prev = final;
+  }
+  return results;
+}
+
+function fmtSigned(n){
+  n = Number(n)||0;
+  return n>0 ? '+'+n : String(n);
+}
+
+async function storageGet(key, shared){
+  try{
+    const r = await window.storage.get(key, shared);
+    return r ? JSON.parse(r.value) : null;
+  }catch(e){
+    return null;
+  }
+}
+async function storageSet(key, value, shared){
+  try{
+    await window.storage.set(key, JSON.stringify(value), shared);
+    return true;
+  }catch(e){
+    console.error('storage set failed', e);
+    return false;
+  }
+}
+
+async function createRoom(hostName, startingPoints){
+  state.loading = true; render();
+  let code = genRoomCode();
+  for(let tries=0; tries<5; tries++){
+    const existing = await storageGet('room:'+code, true);
+    if(!existing) break;
+    code = genRoomCode();
+  }
+  const playerId = genPlayerId();
+  const room = {
+    code,
+    players:[{id:playerId, name:hostName, startingPoints:Number(startingPoints)||0}],
+    createdAt: Date.now(),
+  };
+  await storageSet('room:'+code, room, true);
+  await storageSet('scores:'+code+':'+playerId, emptyScores(), true);
+
+  state.room = room;
+  state.roomCode = code;
+  state.playerId = playerId;
+  state.playerName = hostName;
+  state.scores = emptyScores();
+  state.loading = false;
+  state.screen = 'lobby';
+  render();
+}
+
+async function joinRoom(code, name, startingPoints){
+  state.loading = true; state.error = null; render();
+  code = code.toUpperCase().trim();
+  const room = await storageGet('room:'+code, true);
+  if(!room){
+    state.loading = false;
+    state.error = "Couldn't find a room with that code. Double-check it with your host.";
+    render();
+    return;
+  }
+  const existing = room.players.find(p => p.name.toLowerCase() === name.toLowerCase().trim());
+  let playerId;
+  if(existing){
+    playerId = existing.id;
+    state.scores = await storageGet('scores:'+code+':'+playerId, true) || emptyScores();
+  } else {
+    playerId = genPlayerId();
+    room.players.push({id:playerId, name:name.trim(), startingPoints:Number(startingPoints)||0});
+    await storageSet('room:'+code, room, true);
+    state.scores = emptyScores();
+    await storageSet('scores:'+code+':'+playerId, state.scores, true);
+  }
+  state.room = room;
+  state.roomCode = code;
+  state.playerId = playerId;
+  state.playerName = existing ? existing.name : name.trim();
+  state.loading = false;
+  state.screen = 'lobby';
+  render();
+}
+
+async function refreshRoom(){
+  if(!state.roomCode) return;
+  const room = await storageGet('room:'+state.roomCode, true);
+  if(room) state.room = room;
+}
+
+async function saveScores(){
+  if(!state.roomCode || !state.playerId) return;
+  await storageSet('scores:'+state.roomCode+':'+state.playerId, state.scores, true);
+}
+
+function updateField(field, value){
+  const wk = state.scores['week'+state.activeWeek];
+  wk[field] = value;
+  render();
+  saveScores();
+}
+
+// ---------- RENDER ----------
+
+function render(){
+  const app = document.getElementById('app');
+  app.innerHTML = '';
+
+  if(state.screen === 'game' && state.showReveal){
+    app.appendChild(renderRevealOverlay());
+    return;
+  }
+  if(state.screen === 'game' && state.showFullScorecard){
+    app.appendChild(renderFullScorecardOverlay());
+    return;
+  }
+
+  app.appendChild(renderStains());
+
+  if(state.screen === 'home') app.appendChild(renderHome());
+  else if(state.screen === 'create') app.appendChild(renderCreate());
+  else if(state.screen === 'join') app.appendChild(renderJoin());
+  else if(state.screen === 'lobby') app.appendChild(renderLobby());
+  else if(state.screen === 'game') app.appendChild(renderGame());
+}
+
+function renderStains(){
+  const wrap = document.createElement('div');
+  wrap.innerHTML = `
+    <div class="stain" style="width:260px;height:260px;top:-60px;right:-90px;"></div>
+    <div class="stain" style="width:140px;height:140px;bottom:40px;left:-50px;"></div>
+  `;
+  return wrap;
+}
+
+function brandHeader(subtitle){
+  const div = document.createElement('div');
+  div.className = 'brand';
+  div.innerHTML = `
+    <svg class="cup" viewBox="0 0 64 64" fill="none">
+      <path d="M12 24h32v18a12 12 0 0 1-12 12H24a12 12 0 0 1-12-12V24z" stroke="var(--gold)" stroke-width="2.2"/>
+      <path d="M44 28h4a7 7 0 0 1 0 14h-4" stroke="var(--gold)" stroke-width="2.2"/>
+      <path d="M18 24c0-4 3-5 3-9M28 24c0-4 3-5 3-9M38 24c0-4 3-5 3-9" stroke="var(--rose)" stroke-width="1.6" stroke-linecap="round" opacity="0.7"/>
+    </svg>
+    <div class="eyebrow">Weekly Reputation Tracker</div>
+    <h1>Spill the <span>Tea</span></h1>
+    <div class="sub">${subtitle||''}</div>
+  `;
+  return div;
+}
+
+function renderHome(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(brandHeader('A digital scorecard for game night'));
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <h2>Start a game</h2>
+    <div class="desc">Whoever's hosting creates the room and shares the code. Everyone else joins with it from their own phone.</div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="btn-create">Create Room</button>
+      <button class="btn btn-ghost" id="btn-join">Join Room</button>
+    </div>
+  `;
+  wrap.appendChild(card);
+
+  const legendCard = renderLegendCard();
+  wrap.appendChild(legendCard);
+
+  setTimeout(()=>{
+    document.getElementById('btn-create').onclick = ()=>{ state.screen='create'; render(); };
+    document.getElementById('btn-join').onclick = ()=>{ state.screen='join'; render(); };
+  },0);
+
+  return wrap;
+}
+
+function renderLegendCard(){
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="collapsible-header" id="legend-toggle">
+      <h2 style="font-size:16px;">Tea Card reference</h2>
+      <svg class="chev ${state.legendOpen?'open':''}" width="16" height="16" viewBox="0 0 16 16"><path d="M4 6l4 4 4-4" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    ${state.legendOpen ? `<div style="margin-top:12px;">
+      ${CARD_LEGEND.map(c=>`
+        <div class="legend-item">
+          <div class="lname"><span>${c.name}</span>${c.pts!==null?`<span class="pts ${c.pts>0?'pos':c.pts<0?'neg':''}">${c.pts>0?'+':''}${c.pts}</span>`:''}</div>
+          <div class="ldesc">${c.desc}</div>
+        </div>
+      `).join('')}
+    </div>` : ''}
+  `;
+  setTimeout(()=>{
+    const t = document.getElementById('legend-toggle');
+    if(t) t.onclick = ()=>{ state.legendOpen = !state.legendOpen; render(); };
+  },0);
+  return card;
+}
+
+function renderCreate(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(brandHeader('Create a room'));
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <h2>Your details</h2>
+    <div class="desc">Enter the number on the Player Card you were dealt — that's your starting reputation for Week 1.</div>
+    <label>Your name</label>
+    <input type="text" id="in-name" placeholder="e.g. Jordan" maxlength="20">
+    <label>Starting points (from your dealt Player Card)</label>
+    <input type="number" id="in-start" placeholder="e.g. 4">
+    ${state.error?`<div class="error-msg">${state.error}</div>`:''}
+    <button class="btn btn-primary" id="btn-do-create" ${state.loading?'disabled':''}>${state.loading?'Creating…':'Create Room'}</button>
+    <button class="btn btn-ghost" id="btn-back" style="margin-top:10px;">Back</button>
+  `;
+  wrap.appendChild(card);
+  setTimeout(()=>{
+    document.getElementById('btn-back').onclick = ()=>{ state.screen='home'; state.error=null; render(); };
+    document.getElementById('btn-do-create').onclick = ()=>{
+      const name = document.getElementById('in-name').value.trim();
+      const start = document.getElementById('in-start').value;
+      if(!name){ state.error='Enter your name to continue.'; render(); return; }
+      state.error = null;
+      createRoom(name, start);
+    };
+  },0);
+  return wrap;
+}
+
+function renderJoin(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(brandHeader('Join a room'));
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <h2>Room details</h2>
+    <label>Room code</label>
+    <input type="text" id="in-code" placeholder="e.g. TEAX" maxlength="4" style="text-transform:uppercase; letter-spacing:4px; font-family:'Space Mono', monospace;">
+    <label>Your name</label>
+    <input type="text" id="in-name" placeholder="e.g. Jordan" maxlength="20">
+    <label>Starting points (from your dealt Player Card) — skip if you already joined earlier</label>
+    <input type="number" id="in-start" placeholder="e.g. 4">
+    ${state.error?`<div class="error-msg">${state.error}</div>`:''}
+    <button class="btn btn-primary" id="btn-do-join" ${state.loading?'disabled':''}>${state.loading?'Joining…':'Join Room'}</button>
+    <button class="btn btn-ghost" id="btn-back" style="margin-top:10px;">Back</button>
+  `;
+  wrap.appendChild(card);
+  setTimeout(()=>{
+    document.getElementById('btn-back').onclick = ()=>{ state.screen='home'; state.error=null; render(); };
+    document.getElementById('btn-do-join').onclick = ()=>{
+      const code = document.getElementById('in-code').value.trim();
+      const name = document.getElementById('in-name').value.trim();
+      const start = document.getElementById('in-start').value;
+      if(!code || code.length<4){ state.error='Enter the 4-letter room code.'; render(); return; }
+      if(!name){ state.error='Enter your name to continue.'; render(); return; }
+      state.error = null;
+      joinRoom(code, name, start);
+    };
+  },0);
+  return wrap;
+}
+
+function renderLobby(){
+  const wrap = document.createElement('div');
+  wrap.appendChild(brandHeader('Waiting to begin'));
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <h2>Room code</h2>
+    <div class="room-code">${state.roomCode}</div>
+    <div class="hint">Share this code — others join from their own phone (3–6 players).</div>
+    <label>Players joined (${state.room.players.length})</label>
+    <ul class="player-list">
+      ${state.room.players.map(p=>`<li>${p.name} ${p.id===state.playerId?'<span class="tag">You</span>':''}</li>`).join('')}
+    </ul>
+    <button class="btn btn-ghost" id="btn-refresh">Refresh player list</button>
+    <div class="divider">then</div>
+    <button class="btn btn-primary" id="btn-enter">Open My Scorecard</button>
+    ${state.confirmQuit ? `
+      <div class="error-msg" style="margin-top:14px;">Quit this game? Your scores are still saved if you rejoin later with the same name and room code.</div>
+      <div class="btn-row">
+        <button class="btn btn-ghost" id="btn-quit-cancel">Cancel</button>
+        <button class="btn btn-rose" id="btn-quit-confirm">Yes, Quit</button>
+      </div>
+    ` : `
+      <button class="btn btn-ghost" id="btn-quit" style="margin-top:10px; color:var(--bad); border-color:var(--bad);">Quit Game</button>
+    `}
+  `;
+  wrap.appendChild(card);
+  setTimeout(()=>{
+    document.getElementById('btn-refresh').onclick = async ()=>{ await refreshRoom(); render(); };
+    document.getElementById('btn-enter').onclick = ()=>{ state.screen='game'; render(); };
+    if(state.confirmQuit){
+      document.getElementById('btn-quit-cancel').onclick = ()=>{ state.confirmQuit=false; render(); };
+      document.getElementById('btn-quit-confirm').onclick = ()=>{
+        state.screen = 'home';
+        state.roomCode = null;
+        state.playerId = null;
+        state.playerName = null;
+        state.room = null;
+        state.scores = null;
+        state.activeWeek = 1;
+        state.showReveal = false;
+        state.showFullScorecard = false;
+        state.confirmQuit = false;
+        render();
+      };
+    } else {
+      document.getElementById('btn-quit').onclick = ()=>{ state.confirmQuit=true; render(); };
+    }
+  },0);
+  return wrap;
+}
+
+function renderRevealOverlay(){
+  const me = state.room.players.find(p=>p.id===state.playerId);
+  const computed = computeAll(state.scores, me.startingPoints);
+  const value = computed['week'+state.activeWeek].subtotalFromPrev;
+  const caption = state.activeWeek === 1
+    ? 'Starting points'
+    : 'Final Total from Week ' + (state.activeWeek - 1);
+
+  const wrap = document.createElement('div');
+  wrap.className = 'reveal-overlay';
+  wrap.innerHTML = `
+    <div class="eyebrow">${state.playerName}</div>
+    <div class="big-num">${value}</div>
+    <div class="cap">${caption}</div>
+    <button class="btn btn-primary" id="btn-close-reveal">Back to Scorecard</button>
+  `;
+  setTimeout(()=>{
+    document.getElementById('btn-close-reveal').onclick = ()=>{ state.showReveal=false; render(); };
+  },0);
+  return wrap;
+}
+
+function renderFullScorecardOverlay(){
+  const me = state.room.players.find(p=>p.id===state.playerId);
+  const computed = computeAll(state.scores, me.startingPoints);
+
+  const rows = [
+    {label:'Prev Wk', cls:'', get:(i)=>computed['week'+i].subtotalFromPrev},
+    {label:'Tea Party', cls:'', get:(i)=>fmtSigned(state.scores['week'+i].teaParty)},
+    {label:'Host', cls:'', get:(i)=> state.scores['week'+i].partyHost===true ? '+3' : '0'},
+    {label:'Ruined', cls:'', get:(i)=> state.scores['week'+i].reputationRuined===true ? '−3' : '0'},
+    {label:'Subtotal', cls:'subtotal', get:(i)=>computed['week'+i].subtotal},
+    {label:'Tea Cards', cls:'', get:(i)=>fmtSigned(state.scores['week'+i].teaCardPoints)},
+    {label:'Final', cls:'final', get:(i)=>computed['week'+i].final},
+  ];
+
+  let gridCells = '';
+  gridCells += `<div class="gcell head rowlabel">Week</div>`;
+  for(let i=1;i<=WEEKS;i++) gridCells += `<div class="gcell head">${i}</div>`;
+  rows.forEach(r=>{
+    gridCells += `<div class="gcell rowlabel ${r.cls}">${r.label}</div>`;
+    for(let i=1;i<=WEEKS;i++){
+      gridCells += `<div class="gcell ${r.cls}">${r.get(i)}</div>`;
+    }
+  });
+
+  const wrap = document.createElement('div');
+  wrap.className = 'full-overlay';
+  wrap.innerHTML = `
+    <div class="full-head">
+      <h2>${state.playerName}'s Full Scorecard</h2>
+      <div class="sub">All 7 weeks — Spill the Tea</div>
+    </div>
+    <div class="full-grid">${gridCells}</div>
+    <button class="btn btn-primary" id="btn-close-full">Back to Scorecard</button>
+  `;
+  setTimeout(()=>{
+    document.getElementById('btn-close-full').onclick = ()=>{ state.showFullScorecard=false; render(); };
+  },0);
+  return wrap;
+}
+
+function rowControl(leftHtml, rightHtml){
+  return `<div class="control-left">${leftHtml||''}</div><div class="control-right">${rightHtml}</div>`;
+}
+
+function yesNoControl(idPrefix, currentValue, pointValue){
+  const posNeg = pointValue > 0 ? 'pos' : 'neg';
+  const badgeLabel = pointValue > 0 ? ('+'+pointValue) : String(pointValue);
+  const appliedValue = currentValue === true ? badgeLabel : '0';
+  const left = `
+    <div class="point-badge ${posNeg}">${badgeLabel}</div>
+    <div class="yesno" id="${idPrefix}">
+      <div class="yesno-opt ${currentValue===false?'active-no':''}" data-val="no">No</div>
+      <div class="yesno-opt ${currentValue===true?'active-yes':''}" data-val="yes">Yes</div>
+    </div>
+  `;
+  const right = `
+    <div class="slot"></div>
+    <div class="slot-value">${appliedValue}</div>
+    <div class="slot"></div>
+  `;
+  return rowControl(left, right);
+}
+
+function renderGame(){
+  const wrap = document.createElement('div');
+  const me = state.room.players.find(p=>p.id===state.playerId);
+  const computed = computeAll(state.scores, me.startingPoints);
+  const wk = state.scores['week'+state.activeWeek];
+  const c = computed['week'+state.activeWeek];
+
+  const top = document.createElement('div');
+  top.className = 'topbar';
+  top.innerHTML = `
+    <div class="who">${state.playerName}</div>
+    <div class="code-chip">${state.roomCode}</div>
+  `;
+  wrap.appendChild(top);
+
+  const fullBtn = document.createElement('button');
+  fullBtn.className = 'action-btn gold';
+  fullBtn.id = 'btn-view-full';
+  fullBtn.textContent = 'View My Entire Scorecard';
+  wrap.appendChild(fullBtn);
+
+  const weekLabel = document.createElement('div');
+  weekLabel.className = 'week-label';
+  weekLabel.innerHTML = `<label>Week</label>`;
+  wrap.appendChild(weekLabel);
+
+  const weekGrid = document.createElement('div');
+  weekGrid.className = 'week-grid';
+  for(let i=1;i<=WEEKS;i++){
+    const t = document.createElement('div');
+    t.className = 'week-btn' + (state.activeWeek===i?' active':'');
+    t.textContent = i;
+    t.onclick = ()=>{ state.activeWeek=i; render(); };
+    weekGrid.appendChild(t);
+  }
+  wrap.appendChild(weekGrid);
+
+  const revealBtn = document.createElement('button');
+  revealBtn.className = 'action-btn rose';
+  revealBtn.id = 'btn-reveal';
+  revealBtn.innerHTML = `Show My Final Total From Previous Week`;
+  wrap.appendChild(revealBtn);
+
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="row">
+      <div class="row-label">Subtotal from previous week<small>${state.activeWeek===1?'Your starting points':'Carried from Week '+(state.activeWeek-1)}</small></div>
+      <div class="row-control">${rowControl('', `<div class="slot"></div><div class="slot-value">${c.subtotalFromPrev}</div><div class="slot"></div>`)}</div>
+    </div>
+    <div class="row">
+      <div class="row-label">Tea Party<small>Points earned or lost from the die roll</small></div>
+      <div class="row-control">${rowControl('', `<div class="slot"><div class="step-btn" id="tp-minus">−</div></div><div class="slot-value" id="tp-val">${wk.teaParty}</div><div class="slot"><div class="step-btn" id="tp-plus">+</div></div>`)}</div>
+    </div>
+    <div class="row">
+      <div class="row-label">Party Host<small>Did you host this week?</small></div>
+      <div class="row-control">${yesNoControl('yn-host', wk.partyHost, 3)}</div>
+    </div>
+    <div class="row">
+      <div class="row-label">Reputation Ruined<small>Were you chosen this week?</small></div>
+      <div class="row-control">${yesNoControl('yn-ruined', wk.reputationRuined, -3)}</div>
+    </div>
+    <div class="row subtotal-row">
+      <div class="row-label">Subtotal</div>
+      <div class="row-control">${rowControl('', `<div class="slot"></div><div class="slot-value">${c.subtotal}</div><div class="slot"></div>`)}</div>
+    </div>
+    <div class="row" style="border-bottom:none;">
+      <div class="row-label">Tea Card Points<small>Total from Tea cards drawn this week</small></div>
+      <div class="row-control">${rowControl('', `<div class="slot"><div class="step-btn" id="tc-minus">−</div></div><div class="slot-value" id="tc-val">${wk.teaCardPoints}</div><div class="slot"><div class="step-btn" id="tc-plus">+</div></div>`)}</div>
+    </div>
+    <div class="row final-row">
+      <div class="row-label">Final Total</div>
+      <div class="row-control">${rowControl('', `<div class="slot"></div><div class="slot-value">${c.final}</div><div class="slot"></div>`)}</div>
+    </div>
+  `;
+  wrap.appendChild(card);
+  wrap.appendChild(renderLegendCard());
+
+  const nav = document.createElement('div');
+  nav.className = 'bottom-nav';
+  nav.innerHTML = `<button class="btn btn-ghost" id="btn-lobby">Back to Lobby</button>`;
+  wrap.appendChild(nav);
+
+  setTimeout(()=>{
+    document.getElementById('btn-reveal').onclick = ()=>{ state.showReveal=true; render(); };
+    document.getElementById('btn-view-full').onclick = ()=>{ state.showFullScorecard=true; render(); };
+    document.getElementById('btn-lobby').onclick = async ()=>{ await refreshRoom(); state.screen='lobby'; render(); };
+    document.getElementById('tp-minus').onclick = ()=>updateField('teaParty', (Number(wk.teaParty)||0) - 1);
+    document.getElementById('tp-plus').onclick = ()=>updateField('teaParty', (Number(wk.teaParty)||0) + 1);
+    document.getElementById('tc-minus').onclick = ()=>updateField('teaCardPoints', (Number(wk.teaCardPoints)||0) - 1);
+    document.getElementById('tc-plus').onclick = ()=>updateField('teaCardPoints', (Number(wk.teaCardPoints)||0) + 1);
+    document.getElementById('yn-host').querySelectorAll('.yesno-opt').forEach(opt=>{
+      opt.onclick = ()=>updateField('partyHost', opt.dataset.val === 'yes');
+    });
+    document.getElementById('yn-ruined').querySelectorAll('.yesno-opt').forEach(opt=>{
+      opt.onclick = ()=>updateField('reputationRuined', opt.dataset.val === 'yes');
+    });
+  },0);
+
+  return wrap;
+}
+
+render();
+})();
+</script>
+</body>
+</html>
